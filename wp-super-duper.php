@@ -78,11 +78,9 @@ if ( ! class_exists( 'WP_Super_Duper' ) ) {
 
 			if ( ! $sd_widget_scripts ) {
 				// enqueue admin and frontend styles and scripts differently
-				if ( is_admin() ) {
-					add_action( 'admin_enqueue_scripts', array( $this, 'add_inline_styles_and_scripts') );
-				} else {
-					$this->add_inline_styles_and_scripts();
-				}
+				add_action( 'enqueue_scripts', array( $this, 'add_inline_styles_and_scripts') );
+				add_action( 'admin_enqueue_scripts', array( $this, 'add_inline_styles_and_scripts') );
+
 
 				// maybe add elementor editor styles
 				add_action( 'elementor/editor/after_enqueue_styles', array( $this, 'elementor_editor_styles' ) );
