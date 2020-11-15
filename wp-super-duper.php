@@ -77,9 +77,12 @@ if ( ! class_exists( 'WP_Super_Duper' ) ) {
 			global $sd_widget_scripts;
 
 			if ( ! $sd_widget_scripts ) {
-				wp_add_inline_script( 'admin-widgets', $this->widget_js() );
-				wp_add_inline_script( 'customize-controls', $this->widget_js() );
-				wp_add_inline_style( 'widgets', $this->widget_css() );
+				// enqueue admin and frontend styles and scripts differently
+				if ( is_admin() ) {
+					add_action( 'admin_enqueue_scripts', array( $this, 'add_inline_styles_and_scripts') );
+				} else {
+					$this->add_inline_styles_and_scripts();
+				}
 
 				// maybe add elementor editor styles
 				add_action( 'elementor/editor/after_enqueue_styles', array( $this, 'elementor_editor_styles' ) );
@@ -118,6 +121,15 @@ if ( ! class_exists( 'WP_Super_Duper' ) ) {
 		 */
 		public function elementor_editor_styles() {
 			wp_add_inline_style( 'elementor-editor', $this->widget_css( false ) );
+		}
+		
+		/**
+		 * Add our inline styles and scripts.
+		 */
+		public function add_inline_styles_and_scripts(){
+			wp_add_inline_script( 'admin-widgets', $this->widget_js() );
+			wp_add_inline_script( 'customize-controls', $this->widget_js() );
+			wp_add_inline_style( 'widgets', $this->widget_css() );
 		}
 
 		public function register_fusion_element() {
